@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #main{
+            width: 700px;
+            height: 600px;
+            margin: auto;
+            border: 1px solid #000;
+        }
+        td{
+            margin: auto;
+            width: 100%;
+            
+        }
+        #butt{
+            color: white;
+            background-color: rgb(5, 210, 218);
+            width: 100%;
+            padding: 5px;
+        }
+        input{
+            width: 500px;
+        }
+        #zagol, #zagol2{
+            background-color: rgb(207, 204, 204);
+            font-weight: 900;
+            padding: 5px;
+        }
+        #secondTable, #thirdTable{
+            width:auto;
+            width: 700px;
+            margin: auto;
+        }
+        
+    </style>
+    <script>
+        window.onload = init;
+        function init(){
+            let nazhat = document.getElementById("butt");
+            nazhat.onclick = function(){
+                let result = document.getElementsByClassName("input");
+                let massive = [];
+                for(let i = 0; i<result.length; i++){
+                    massive.push(result[i].value);
+                }
+                aeroflot(massive);
+                poezd(massive);
+            } 
+        }
+
+
+        function poezd(massive){
+            if(massive[2] > 60){
+                let four = document.getElementById("4");
+                four.textContent = "Билетов в данной категории нет. Превышен лимит багажа";
+                return false;
+            }
+            if(50 < massive[2] <= 60){
+                var twoTrain = new AdvancedRzhd(massive);
+                var threeTrain = new LuxRzhd(massive);
+                the2TrainPrices(twoTrain.advancedPrice(),threeTrain.luxPrice()); 
+            }
+            if(massive[2] <= 50){
+                var oneTrain = new EconomRzhd(massive);
+                var twoTrain = new AdvancedRzhd(massive);
+                var threeTrain = new LuxRzhd(massive);
+                theTrainPrices(oneTrain.economPrice());
+                the2TrainPrices(twoTrain.advancedPrice(),threeTrain.luxPrice());  
+            }
+        }
+
+
+
+        function aeroflot(massive){
+            if(massive[2] > 50){
+                let first = document.getElementById("1");
+                first.textContent = "Билетов в данной категории нет. Превышен лимит багажа";
+                return false;
+            }
+           if(20 < massive[2] <= 50){
+                var aeroflotAdvanced = new AeroflotTicketAdvanced(massive);
+                var aeroflotLux = new AeroflotTicketLux(massive);
+                the2PricesAeroflot(aeroflotAdvanced.countMeAdvanced(), aeroflotLux.countMeLux());
+            }
+            if(massive[2] <= 20){
+                var aeroflotAdvanced = new AeroflotTicketAdvanced(massive);
+                var aeroflotLux = new AeroflotTicketLux(massive);
+                var aeroflotEconom = new AeroflotTicketEconom(massive);
+                the2PricesAeroflot(aeroflotAdvanced.countMeAdvanced(), aeroflotLux.countMeLux());
+                the3PricesAeroflot(aeroflotEconom.countMeEconom());
+            }
+        }
+
+
+
+
+
+// КЛАССЫ
+            class AeroflotTicketAdvanced{
+                constructor(parametr){
+                    this.parametr = parametr;
+                } 
+                countMeAdvanced(){
+                    this.distance2 =  this.parametr[0] * 8;
+                if(this.parametr[1] < 7){
+                    this.distance2 = this.distance2 - (this.distance2 / 100 * 30);
+                    }
+                if(this.parametr[2] > 20){
+                    this.distance2 += 5000;
+                }
+                return this.distance2;
+                    }
+            }
+
+            class AeroflotTicketLux{
+                constructor(parametr1){
+                    this.parametr1 = parametr1;
+                } 
+                countMeLux(){
+                    this.distance3 =  this.parametr1[0] * 15;
+                if(this.parametr1[1] < 16){
+                    this.distance3 = this.distance3 - (this.distance3 / 100 * 30);
+                    }
+                return this.distance3;
+                    }
+                }
+
+            class AeroflotTicketEconom{
+                constructor(parametr2){
+                    this.parametr2 = parametr2;
+                } 
+                countMeEconom(){
+                    this.distance1 =  this.parametr2[0] * 4;
+                if(5 < this.parametr2[2] < 20){
+                    this.distance1 += 4000;
+                    }
+                return this.distance1;
+                    }
+                }
+
+// КЛАССЫ РЖД
+               class EconomRzhd{
+                   constructor(parametr){
+                      this.parametr = parametr;
+                   }
+               economPrice(){
+                   this.distance4 =  this.parametr[0] * 0.5;
+               if(this.parametr[1] < 5){
+                this.distance4 = this.distance4 / 2;
+               }
+                if(this.parametr[2] > 15){
+                    let moreLug = (this.parametr[2] - 15) * 50;
+                    this.distance4 =  this.distance4 + moreLug;
+                }
+                return this.distance4;
+           }  
+        }
+
+                class AdvancedRzhd{
+                    constructor(parametr){
+                      this.parametr = parametr;
+                   }
+                advancedPrice(){
+                    this.distance5 = this.parametr[0] * 2;
+                if(this.parametr[1] < 8){
+                    this.distance5 = this.distance5 - (this.distance5 / 100 * 30);
+                    }
+                if(this.parametr[2] > 20){
+                    let moreLug = (this.parametr[2] - 20) * 50;
+                    this.distance5 =  this.distance5  + moreLug;
+                }
+                    return this.distance5;
+                }
+            }
+
+                class LuxRzhd{
+                    constructor(parametr){
+                      this.parametr = parametr;
+                   }
+                luxPrice(){
+                    this.distance6 = this.parametr[0] * 4;
+                if(this.parametr[1] < 16){
+                    this.distance6 =  this.distance6 - ( this.distance6 / 100 * 20);
+                }
+                return  this.distance6;
+                }
+           }
+
+
+
+
+
+      
+           
+               
+      
+
+        
+        function the2PricesAeroflot(aeroflotAdvanced, aeroflotLux){
+            let zagolovok = document.getElementById("zagol");
+            zagolovok.textContent = "Aэрофлот";
+            let second = document.getElementById("2");
+            second.textContent = "Продвинутый: " + aeroflotAdvanced + " руб.";
+            let third = document.getElementById("3");
+            third.textContent = "Люкс: " + aeroflotLux + " руб.";
+        }
+
+        function the3PricesAeroflot(aeroflotEconom){
+            let first = document.getElementById("1");
+            first.textContent = "Эконом: " + aeroflotEconom + " руб.";
+        }
+
+        function theTrainPrices(one){
+                let first = document.getElementById("4");
+                first.textContent = "Эконом: " + one + " руб.";
+        }
+        
+        function the2TrainPrices(two,three){
+            let zagolovok = document.getElementById("zagol2");
+            zagolovok.textContent = "РЖД";
+            let second = document.getElementById("5");
+            second.textContent = "Продвинутый: " + two + " руб.";
+            let third = document.getElementById("6");
+            third.textContent = "Люкс: " + three + " руб.";
+        }
+        
+
+    </script>
+</head>
+<body>
+    <div id="main">
+    <table>
+        <tr>
+            <td>Kilometres</td>
+            <td><input class="input" type="text"></td>
+        </tr>
+        <tr>
+            <td>Age</td>
+            <td><input class="input" type="text"></td>
+        </tr>
+        <tr>
+            <td>Lugage kg</td>
+            <td><input class="input" type="text"></td>
+        </tr>
+    </table>
+    <button id="butt">Count</button>
+  
+        <table id="secondTable">
+            <tr id="zagol"> </tr>
+            <tr id="1"></tr>
+            <tr id="2"></tr>
+            <tr id="3"></tr>
+        </table>
+        <table id="thirdTable">
+            <tr id="zagol2"> </tr>
+            <tr id="4"></tr>
+            <tr id="5"></tr>
+            <tr id="6"></tr>
+        </table>
+</div>
+</body>
+</html>
+
+
